@@ -1,0 +1,66 @@
+#!/bin/sh
+#require makefiletop
+#phase init
+#phase config
+#phase makefile
+#after makefile_makefiletop
+case $PHASE in
+	init)
+		dispn "Creating installation script..."
+		$ECHO "#!/bin/sh
+FILENAME="\$2/\`basename \$1\`"
+mkdir -p \$2
+cp -f \$1 \$FILENAME
+chown \$3:\$4 \$FILENAME
+chmod \$5 \$FILENAME" > copy.sh
+		chmod 0755 copy.sh
+		INSTALL="./copy.sh"
+		disp "done"
+
+		dispn "Creating link script..."
+		$ECHO "#!/bin/sh
+mkdir -p \`dirname \$2\`
+ln -f \$1 \$2
+chown \$3:\$4 \$2
+chmod \$5 \$2" > link.sh
+		chmod 0755 link.sh
+		LINK="./link.sh"
+		disp "done"
+
+		dispn "Checking for installation username..."
+		if test "$INSTALL_USER" = ""; then
+			disp "guessing \"0\""
+			INSTALL_USER=0
+		else
+			disp "found in environment: \"$INSTALL_USER\""
+		fi
+
+		dispn "Checking for installation group name..."
+		if test "$INSTALL_GROUP" = ""; then
+			disp "guessing \"0\""
+			INSTALL_GROUP=0
+		else
+			disp "found in environment: \"$INSTALL_GROUP\""
+		fi
+
+		;;
+	config)
+		dispn "Adding install cleanup rules..."
+		MAKEFILE_DISTCLEAN="	\$(MAKE) clean_install
+$MAKEFILE_DISTCLEAN"
+		disp "done"
+		;;
+	makefile)
+		dispn "Writing install entry..."
+		$ECHO "install:"
+		$ECHO -n "$MAKEFILE_INSTALL"
+		$ECHO
+		disp "done"
+
+		dispn "Writing install cleanup entry..."
+		$ECHO "clean_install:"
+		$ECHO "	rm -f $INSTALL $LINK"
+		$ECHO
+		disp "done"
+		;;
+esac

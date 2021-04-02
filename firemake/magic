@@ -1,0 +1,27 @@
+#!/bin/sh
+#require compiletest
+#require cflags
+#phase init
+#after init_cflags
+#phase header
+case $PHASE in
+	init)
+		dispn "Checking for magic library..."
+		PROGRAM="#include <magic.h>
+int main() {
+	magic_t foo = magic_open(MAGIC_MIME);
+	return 0;
+}"
+		compile_test_wrapper "$PROGRAM" "" "" "-lmagic" || \
+		compile_test_wrapper "$PROGRAM" "-I/usr/local/include" "-L/usr/local/lib" "-lmagic" || \
+		compile_test_wrapper "$PROGRAM" "-I/usr/local/include" "-L/usr/local/lib -R/usr/local/lib" "-lmagic" || \
+		{
+			disp "not found, unable to continue"
+			exit 1
+		}
+		;;
+	header)
+		disp "Adding \"#include <magic.h>\" to header"
+		$ECHO "#include <magic.h>"
+		;;
+esac

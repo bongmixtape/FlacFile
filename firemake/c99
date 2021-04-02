@@ -1,0 +1,43 @@
+#!/bin/sh
+#require compiletest
+#require cflags
+#phase init
+#after init_cflags
+case $PHASE in
+	init)
+		dispn "Checking for C99 compatible compiler..."
+		PROGRAM="#include <string.h>
+#include <stdio.h>
+#include <inttypes.h>
+	
+#define eprintf(...) fprintf(stderr,__VA_ARGS__)
+
+struct test_s {
+	int a;
+	char b[50];
+	int c;
+};
+
+static inline int test_func(char * restrict p, int i) {
+	// char a[i]; // FIXME: tcc doesn't support this yet
+	return 0;
+}
+
+int main() {
+	// int64_t i = INT64_C(500); // stupid spec, this is not guaranteed to exist
+	int_least64_t j = INT64_C(501);
+	struct test_s s;
+	memcpy(&s,&((struct test_s) { .c = 50, .b[5] = 10, .b[15] = 20 }),sizeof(s));
+	long long testint; // test of long long presence, mixed declarations and code, and C++-style comments
+	eprintf(\"test %s\",\"foo\");
+	test_func(NULL,10);
+	return 0;
+}"
+		compile_test_wrapper "$PROGRAM" "" "" "" || \
+		compile_test_wrapper "$PROGRAM" "--std=c99" "" "" || \
+		{
+			disp "not found, unable to continue"
+			exit 1
+		}
+		;;
+esac

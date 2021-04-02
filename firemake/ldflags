@@ -1,0 +1,15 @@
+#!/bin/sh
+#require cc
+#phase init
+#after init_cc
+dispn "Attempting to determine correct LDFLAGS..."
+if test ! "$LDFLAGS" = ""; then
+	disp "LDFLAGS provided by environment: \"$LDFLAGS\""
+	FM_LDFLAGS="$LDFLAGS"
+else
+	disp "autodetecting"
+	PROGRAM="int main() {
+	return 0;
+}"
+	compile_test_wrapper "$PROGRAM" "" "-Wl,-O1" "" "quiet"
+fi

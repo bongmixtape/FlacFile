@@ -1,0 +1,19 @@
+#!/bin/sh
+#require cc
+#phase init
+#after init_cc
+dispn "Attempting to determine correct CFLAGS..."
+if test ! "$CFLAGS" = ""; then
+	disp "CFLAGS provided by environment: \"$CFLAGS\""
+	FM_CFLAGS="$CFLAGS"
+else
+	disp "autodetecting"
+	PROGRAM="int main() {
+	return 0;
+}"
+	compile_test_wrapper "$PROGRAM" "-m64" "" "" "quiet"
+	compile_test_wrapper "$PROGRAM" "-fstack-protector" "" "" "quiet"
+	compile_test_wrapper "$PROGRAM" "-pipe" "" "" "quiet"
+
+fi
+BASE_CFLAGS="$FM_CFLAGS"

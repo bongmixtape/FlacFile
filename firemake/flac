@@ -1,0 +1,22 @@
+#!/bin/sh
+#require compiletest
+#require cflags
+#phase init
+#after init_cflags
+case $PHASE in
+	init)
+		dispn "Checking for FLAC library..."
+		PROGRAM="#include <FLAC/metadata.h>
+int main() {
+	FLAC__Metadata_SimpleIterator *i = FLAC__metadata_simple_iterator_new();
+	return 0;
+}"
+		compile_test_wrapper "$PROGRAM" "" "" "-lFLAC" || \
+		compile_test_wrapper "$PROGRAM" "-I/usr/local/include" "-L/usr/local/lib" "-lFLAC" || \
+		compile_test_wrapper "$PROGRAM" "-I/usr/local/include" "-L/usr/local/lib -R/usr/local/lib" "-lFLAC" || \
+		{
+			disp "not found, unable to continue"
+			exit 1
+		}
+		;;
+esac
