@@ -1,7 +1,7 @@
-## What is it?
+### What is it?
 FlacFile is a utility for storing arbitrary files in the metadata section of a [FLAC](https://xiph.org/flac/) file.
 
-## What is the format stored in the metadata?
+### What is the format stored in the metadata?
 The data is stored in an APPLICATION metadata block with the ID 0x41544348 ("ATCH"):
 
 (1 byte) Description length  
@@ -10,7 +10,7 @@ The data is stored in an APPLICATION metadata block with the ID 0x41544348 ("ATC
 (variable) MIME type (UTF-8)  
 (variable) File contents
 
-## Are there recommended "Description" values?
+### Are there recommended "Description" values?
 Yes:
 * Front Cover
 * Back Cover
