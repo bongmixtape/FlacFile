@@ -23,6 +23,6 @@ Yes:
 * Reflection
 
 ## About
-This is a copy of the app created by Ian Gulliver. You can still view the original site via [The Wayback Machine](https://web.archive.org/web/http://firestuff.org/flacfile/).
+This is an archive of the app created by Ian Gulliver. You can still view the original site via [The Wayback Machine](https://web.archive.org/web/http://firestuff.org/flacfile/).
 
 Learn more about FLAC's [APPLICATION metadata blocks](https://xiph.org/flac/format.html#def_APPLICATION).
